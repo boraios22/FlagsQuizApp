@@ -8,6 +8,7 @@ import com.itstep.fragmentandactivity.provider.GameDataProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameCore {
     int life = 3;
@@ -24,9 +25,26 @@ public class GameCore {
         answers.add(selected.getCountryName());
         generateFake();
         generateFake();
+
+        shuffleArray(answers);
+
      return new QuizModel(selected.getBitmap(), answers);
     }
 
+    static void shuffleArray(List<String> ar)
+    {
+        // If running on Java 6 or older, use `new Random()` on RHS here
+        Random rnd = ThreadLocalRandom.current();
+        for (int i = ar.size() - 1; i > 0; i--)
+        {
+            int index = rnd.nextInt(i + 1);
+            // Simple swap
+            String a = ar.get(index);
+            //ar[index] = ar[i];
+            ar.set(index, ar.get(i));
+            ar.set(i, a);
+        }
+    }
 
     public boolean isCorrect(String answered){
         return answered.equals(selected.getCountryName());

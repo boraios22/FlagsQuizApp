@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.itstep.fragmentandactivity.core.GameCore;
 import com.itstep.fragmentandactivity.core.QuizModel;
+import com.itstep.fragmentandactivity.provider.GameDataProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,11 +88,15 @@ public class PlayActivity extends AppCompatActivity  {
             int score = Integer.parseInt(tvScore.getText().toString());
             score++;
             tvScore.setText(String.valueOf(score));
-            writeNewUser(
-                    firebaseUser.getUid(),
-                    firebaseUser.getEmail(),
-                    score
-            );
+
+            if (score > GameDataProvider.getIns().getHighScore()){
+                writeNewUser(
+                        firebaseUser.getUid(),
+                        firebaseUser.getEmail(),
+                        score
+                );
+            }
+
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {

@@ -1,8 +1,10 @@
 package com.itstep.fragmentandactivity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -79,9 +81,11 @@ public class HomeActivity extends AppCompatActivity {
 
                 User user = dataSnapshot.getValue(User.class);
                 if (user != null){
-                    Toast.makeText(HomeActivity.this, "on data changed : " + user.score, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(HomeActivity.this, "on data changed : " + user.score, Toast.LENGTH_SHORT).show();
 
                     tvLastScore.setText(String.valueOf(user.score));
+
+                    GameDataProvider.getIns().setHighScore(user.score);
                 }
 
             }
@@ -114,8 +118,20 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    private void gotoLogin(){
-        finish();
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirm");
+        builder.setMessage("Do you really want to quit?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finishAffinity();
+            }
+        });
+        builder.setNegativeButton("No", null);
+
+        builder.create().show();
     }
 
     private void initAdmob(){
